@@ -1,0 +1,21 @@
+{
+  "version": "mock-fixture-v1",
+  "types": {
+    "job_description": ["Job Description", "招聘", "职位描述"],
+    "paper_abstract": ["Paper Abstract", "论文摘要"],
+    "meeting_minutes": ["Meeting Minutes", "会议纪要"],
+    "technical_report": ["Technical Report", "技术报告"]
+  },
+  "fields": {
+    "position": ["Position", "职位"], "skills": ["Skills", "技能"],
+    "experience": ["Experience", "经验"], "responsibilities": ["Responsibilities", "职责"],
+    "title": ["Title", "标题"], "authors": ["Authors", "作者"],
+    "objective": ["Objective", "目标"], "method": ["Method", "方法"],
+    "findings": ["Findings", "发现"], "date": ["Date", "日期"],
+    "participants": ["Participants", "参会人"], "decisions": ["Decisions", "决定"],
+    "action_items": ["Actions", "行动项"], "system": ["System", "系统"],
+    "metrics": ["Metrics", "指标"], "limitations": ["Limitations", "局限"],
+    "recommendations": ["Recommendations", "建议"], "summary": ["Summary", "摘要"]
+  },
+  "lists": ["skills", "responsibilities", "authors", "findings", "participants", "decisions", "action_items", "metrics", "limitations", "recommendations"]
+}

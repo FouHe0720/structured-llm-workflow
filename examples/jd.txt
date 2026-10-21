@@ -1,0 +1,5 @@
+Job Description
+Position: Python Workflow Engineer
+Skills: Python; SQL; Pydantic
+Responsibilities: Build document pipelines; Review evidence
+Summary: Build reliable document analysis workflows.
