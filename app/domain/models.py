@@ -100,8 +100,16 @@ class Evidence(StrictModel):
 
 
 class Conflict(StrictModel):
-    field: str
+    field: Literal[
+        "position", "experience", "title", "objective", "method", "date", "system", "summary"
+    ]
     values: list[str]
+
+
+class AnalysisInsights(StrictModel):
+    highlights: list[str]
+    risks: list[str]
+    conflicts: list[Conflict]
 
 
 class CallRecord(StrictModel):

@@ -1,0 +1,7 @@
+Technical Report
+Title: Local document pipeline review
+System: CPU-only fixture workflow
+Metrics: No performance benchmark was conducted
+Limitations: OCR is not supported
+Recommendations: Review source evidence before decisions
+Summary: A fixed workflow produces auditable structured reports.

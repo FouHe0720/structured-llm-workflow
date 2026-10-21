@@ -1,0 +1,4 @@
+{
+  "description": "No prices assumed. Add exact model keys with as_of, source, input_usd_per_million_tokens and output_usd_per_million_tokens; otherwise cost stays null. Estimated usage produces estimated cost, not an invoice.",
+  "models": {}
+}
