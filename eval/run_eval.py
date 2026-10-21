@@ -139,7 +139,7 @@ def write_results(result: dict, output: Path) -> None:
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     with (output / "results.csv").open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(result["rows"][0]))
+        writer = csv.DictWriter(stream, fieldnames=list(result["rows"][0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(result["rows"])
     summary = [
