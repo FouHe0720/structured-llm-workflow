@@ -173,6 +173,7 @@ adapter 使用 `POST {BASE_URL}/chat/completions`，适用于兼容该协议的�
 | Package | sdist / wheel 构建成功；9 个 prompt 与 Mock fixture 均已打包 |
 | Docker | 镜像构建成功；容器 UID 10001，CLI、health / analyze 实跑成功 |
 | 公共内容扫描 | 通过；运行产物、缓存、`.env` 与 venv 被排除 |
+| GitHub Actions | [首发 CI](https://github.com/FouHe0720/structured-llm-workflow/actions/runs/39546943233) 通过；Python 3.10 / 3.12 各 60 passed，Docker job 通过 |
 | 真实外部模型 | 未执行，无 API Key 前置要求 |
 
 完整本机记录见 [VERIFICATION](docs/VERIFICATION.md)；GitHub Actions 结果见顶部动态 badge / Actions 页面。

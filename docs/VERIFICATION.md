@@ -49,7 +49,10 @@ gold 字段为本项目逐条显式编写，未获独立人工复核；分母定
 - Python 依赖下载、Docker base/依赖下载真实执行过；完整离线工作流在安装后不需要网络。
 - 外部真实 LLM：未配置、未调用；不得引用本仓库 Mock 结果宣称真实模型准确率。
 - CI 配置包含 Python 3.10 / 3.12 与 Docker job。远端运行由发布后的 Actions 触发，
-  以仓库顶部 badge 和 Actions 运行记录为准；本文件的 60 passed 指本机 Python 3.12。
+  [首次运行 39546943233](https://github.com/FouHe0720/structured-llm-workflow/actions/runs/39546943233)
+  对首发提交 `dbeb7bd74a67d7b4f5574a76ce2368f83b43aafd` 实际通过：Python 3.10 / 3.12
+  各 60 passed、1 warning，Ruff / 公开扫描 / Demo / 评测通过；Docker build / CLI job 通过。
+  后续提交状态以仓库顶部 badge 和 Actions 为准。
 - 自建价格表默认空；本次 cost=null，没有使用或推断商业实时价格。
 
 ## 公开发布检查
@@ -57,3 +60,7 @@ gold 字段为本项目逐条显式编写，未获独立人工复核；分母定
 仅跟踪代码、锁文件、原创示例/标注和评测快照；`.env`、`.venv`、数据库、日志、
 运行时 outputs、缓存、下载与模型权重被忽略。项目扫描是针对本仓库的有限规则，不能替代专业 secret scanner。
 发布前再次核对工作目录 / Git 根目录、账户、staged 文件、远端归属和 PUBLIC 设置；不强推、不覆盖其他仓库。
+
+实际公开发布已通过 `gh repo create --public --source=. --remote=origin --push` 完成，
+`gh repo view --json url,visibility` 确认 [FouHe0720/structured-llm-workflow](https://github.com/FouHe0720/structured-llm-workflow) 为 PUBLIC。
+首发后本地 main 与 origin/main 一致且工作树干净；公开 main 历史使用 GitHub noreply 身份。

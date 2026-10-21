@@ -26,4 +26,4 @@
 - V0：`efc8ce2`，CLI / 文本 / typed Mock Workflow，5 个测试通过。
 - V1：`4e16994`，PDF/API、prompt、兼容 Provider、有限修复、Map/Reduce、缓存和用量，49 个测试通过。
 - V2：`7fda586`，40 条 gold 评测、完整工程配置、Docker 实跑；最终 60 个测试通过。`d7bfac6` 修正 CSV 为 LF 行尾。
-- V3：README、架构、Demo、面试材料、简历和真实验证记录已补齐；随后执行公开检查与指定仓库发布。实际远端状态以 GitHub 命令复核与 Actions 记录为准。
+- V3：README、架构、Demo、面试材料、简历和验证记录齐备；公开内容检查通过，已发布到指定 PUBLIC 仓库。首发 CI 的 Python 3.10 / 3.12 各 60 个测试与 Docker job 均通过，链接见 `docs/VERIFICATION.md`。
