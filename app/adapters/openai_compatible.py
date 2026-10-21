@@ -88,7 +88,7 @@ class OpenAICompatible:
             raise WorkflowError(
                 "provider_connection", "Cannot connect to model provider", step=request.step
             ) from exc
-        except (ValueError, KeyError, IndexError, TypeError) as exc:
+        except (ValueError, KeyError, IndexError, TypeError, AttributeError) as exc:
             raise WorkflowError(
                 "provider_protocol", "Unexpected provider response structure", step=request.step
             ) from exc

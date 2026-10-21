@@ -2,6 +2,7 @@
 
 import json
 import math
+from datetime import date
 from pathlib import Path
 
 from app.domain.models import CallRecord, Usage
@@ -23,18 +24,23 @@ class PriceTable:
             self.data = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             self.data = {}
+        if not isinstance(self.data, dict) or not isinstance(self.data.get("models", {}), dict):
+            self.data = {}
 
     def cost(self, model: str, record: CallRecord) -> float | None:
         row = self.data.get("models", {}).get(model)
-        if not row or not row.get("as_of") or not row.get("source"):
+        if not isinstance(row, dict) or not row.get("as_of") or not row.get("source"):
             return None
         try:
+            date.fromisoformat(row["as_of"])
+            if not row["source"].startswith(("https://", "http://")):
+                return None
             a = float(row["input_usd_per_million_tokens"])
             b = float(row["output_usd_per_million_tokens"])
             if not (math.isfinite(a) and math.isfinite(b) and a >= 0 and b >= 0):
                 return None
             return (record.input_tokens * a + record.output_tokens * b) / 1_000_000
-        except (ValueError, TypeError, KeyError):
+        except (ValueError, TypeError, KeyError, AttributeError):
             return None
 
 

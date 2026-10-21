@@ -58,11 +58,19 @@ class Pipeline:
 
     def run(self, document: Document) -> AnalysisReport:
         started = time.perf_counter()
-        service = ModelService(self.provider, self.settings)
+        service = ModelService(self.provider, self.settings, document.sha256)
         timings: dict[str, float] = {}
         partial: dict = {"completed_steps": ["parser"], "document_hash": document.sha256}
         warnings = list(document.warnings)
         source_chunks = chunks(document.text, self.settings.chunk_tokens)
+        if any(
+            conservative_tokens(line) > self.settings.chunk_tokens
+            for line in document.text.splitlines()
+        ):
+            warnings.append(
+                "An over-budget line was split; relationships spanning chunks "
+                "may need human review."
+            )
         if len(source_chunks) > 1:
             warnings.append(
                 f"Map/Reduce over {len(source_chunks)} chunks; UTF-8 byte estimates are "

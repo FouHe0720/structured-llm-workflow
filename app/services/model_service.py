@@ -23,14 +23,23 @@ def extract_json(raw: str) -> str:
     raw = raw.strip()
     if raw.startswith("```") and raw.endswith("```"):
         raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-    value = json.loads(raw)
+
+    def unique_object(pairs: list[tuple[str, object]]) -> dict:
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate JSON key")
+            result[key] = value
+        return result
+
+    value = json.loads(raw, object_pairs_hook=unique_object)
     if not isinstance(value, dict):
         raise ValueError("Expected a JSON object")
     return json.dumps(value, ensure_ascii=False)
 
 
 class ModelService:
-    def __init__(self, provider: Provider, settings: Settings) -> None:
+    def __init__(self, provider: Provider, settings: Settings, document_hash: str = "") -> None:
         self.provider = provider
         self.settings = settings
         self.prompts = PromptStore()
@@ -39,7 +48,13 @@ class ModelService:
         self.records: list[CallRecord] = []
         # Endpoint identity is hashed into the namespace; credentials are never included.
         self.namespace = "|".join(
-            (settings.provider, provider.model, settings.base_url, settings.response_mode)
+            (
+                settings.provider,
+                provider.model,
+                settings.base_url,
+                settings.response_mode,
+                document_hash,
+            )
         )
 
     @staticmethod
@@ -135,6 +150,11 @@ class ModelService:
                 record.elapsed_ms = (time.perf_counter() - started) * 1000
                 record.cost_usd = self.prices.cost(self.provider.model, record)
                 self.records.append(record)
-            self.cache.put(key, value.model_dump_json())
+            try:
+                self.cache.put(key, value.model_dump_json())
+            except OSError as exc:
+                raise WorkflowError(
+                    "cache_io_error", "Cannot write configured cache directory", step=step
+                ) from exc
             return value
         raise AssertionError("Unreachable bounded repair loop")

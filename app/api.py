@@ -8,9 +8,11 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from starlette.concurrency import run_in_threadpool
+from starlette.exceptions import HTTPException
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from app.domain.errors import WorkflowError
+from app.domain.models import AnalysisReport
 from app.infra.config import Settings
 from app.services.pipeline import Pipeline
 
@@ -60,7 +62,10 @@ class AnalyzeRequest(BaseModel):
 
 
 def create_app(settings: Settings | None = None, pipeline: Pipeline | None = None) -> FastAPI:
-    settings = settings or Settings()
+    try:
+        settings = settings or Settings()
+    except ValidationError:
+        raise RuntimeError("Invalid WORKFLOW_* settings; check provider, URL and model") from None
     workflow = pipeline or Pipeline(settings=settings)
     api = FastAPI(title="Structured LLM Workflow", version="0.1.0")
     # Bounded allowance for JSON escape / multipart overhead; file/text checked again below.
@@ -86,24 +91,33 @@ def create_app(settings: Settings | None = None, pipeline: Pipeline | None = Non
             },
         )
 
+    @api.exception_handler(HTTPException)
+    async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": {"code": "invalid_request", "message": "Invalid route or request body"}
+            },
+        )
+
     @api.get("/health")
     def health() -> dict:
         return {"status": "ok", "provider": settings.provider, "model": workflow.provider.model}
 
     @api.post("/v1/analyze")
-    def analyze(body: AnalyzeRequest) -> dict:
+    def analyze(body: AnalyzeRequest) -> AnalysisReport:
         document = workflow.parser.parse_text(body.text, body.name)
-        return workflow.run(document).model_dump(mode="json")
+        return workflow.run(document)
 
     @api.post("/v1/analyze/file")
-    async def analyze_file(file: Annotated[UploadFile, File()]) -> dict:
+    async def analyze_file(file: Annotated[UploadFile, File()]) -> AnalysisReport:
         try:
             data = await file.read(settings.max_bytes + 1)
             document = await run_in_threadpool(
                 workflow.parser.parse_bytes, data, file.filename or "input.txt"
             )
             report = await run_in_threadpool(workflow.run, document)
-            return report.model_dump(mode="json")
+            return report
         finally:
             await file.close()
 

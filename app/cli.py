@@ -22,6 +22,17 @@ def main() -> int:
     analyze.add_argument("--output", type=Path, default=Path("outputs/report.json"))
     args = parser.parse_args()
     try:
+        if args.output.suffix != ".json":
+            raise WorkflowError(
+                "invalid_output", "Output path must end with .json", step="exporter"
+            )
+        if args.input.resolve() in {
+            args.output.resolve(),
+            args.output.with_suffix(".md").resolve(),
+        }:
+            raise WorkflowError(
+                "output_conflict", "Output must not overwrite source", step="exporter"
+            )
         pipeline = Pipeline()
         result = pipeline.analyze_file(args.input)
         export(result, args.output)
