@@ -15,6 +15,7 @@ class DocumentType(str, Enum):
     PAPER = "paper_abstract"
     MEETING = "meeting_minutes"
     REPORT = "technical_report"
+    CAMPUS = "campus_admission"
     UNKNOWN = "unknown"
 
 
@@ -53,11 +54,23 @@ class TechnicalReportInfo(StrictModel):
     summary: str | None
 
 
+class CampusAdmissionInfo(StrictModel):
+    title: str | None
+    audience: str | None
+    registration_window: str | None
+    quota_rules: list[str]
+    selection_rules: list[str]
+    restrictions: list[str]
+    summary: str | None
+
+
 class UnknownInfo(StrictModel):
     summary: str | None
 
 
-Extraction = JobInfo | PaperInfo | MeetingInfo | TechnicalReportInfo | UnknownInfo
+Extraction = (
+    JobInfo | PaperInfo | MeetingInfo | TechnicalReportInfo | CampusAdmissionInfo | UnknownInfo
+)
 
 
 class Classification(StrictModel):
@@ -101,7 +114,16 @@ class Evidence(StrictModel):
 
 class Conflict(StrictModel):
     field: Literal[
-        "position", "experience", "title", "objective", "method", "date", "system", "summary"
+        "position",
+        "experience",
+        "title",
+        "objective",
+        "method",
+        "date",
+        "system",
+        "summary",
+        "audience",
+        "registration_window",
     ]
     values: list[str]
 

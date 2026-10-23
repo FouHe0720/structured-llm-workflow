@@ -4,7 +4,8 @@
     "job_description": ["Job Description", "招聘", "职位描述"],
     "paper_abstract": ["Paper Abstract", "论文摘要"],
     "meeting_minutes": ["Meeting Minutes", "会议纪要"],
-    "technical_report": ["Technical Report", "技术报告"]
+    "technical_report": ["Technical Report", "技术报告"],
+    "campus_admission": ["招生简章"]
   },
   "fields": {
     "position": ["Position", "职位"], "skills": ["Skills", "技能"],

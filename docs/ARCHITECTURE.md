@@ -97,3 +97,13 @@ CLI 非零退出；API 文件超限 413、输入错误 422、模型超时 504、
 Exporter 单独负责 JSON/Markdown；用临时文件和原子替换写各个产物，Markdown 转义源文本，
 JSON fence 随内容选择长度。两个文件分别原子写入，并非跨文件事务；磁盘写失败可能只留下一个产物。
 CLI 检查输出扩展名和源路径，避免 JSON/Markdown 互相覆盖或覆盖输入。
+
+## 校园招生审阅
+
+新增 `CampusAdmissionInfo` 和 `extract_campus_admission` 提示词。它复用分类、提取、合并、
+原文支持校验和用量记录；通用类型与入口保持兼容。离线适配器使用明确的段落匹配规则。
+`app.campus` 读取来源 manifest，核对摘录 hash 后将报告交给 `campus_review`，产生缺项、
+歧义与历史资料提示，并为证据关联原 DOCX 段落。审阅包始终待人工处理，不执行发布。
+
+这是提取后的业务检查层，和 schema/source-span 校验分别记录。来源元数据本身不是经过
+数字签名的真实性证明；原 DOCX 未随包分发。范围见 [校园资料说明](CAMPUS_DATA.md)。

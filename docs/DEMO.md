@@ -1,3 +1,18 @@
+# 校园招生审阅演示
+
+```bash
+make install
+make campus-demo
+```
+
+查看 `outputs/campus/navigation.md`：报名对象保留不得转专业的限制，名额原文包含 30 名，
+`ambiguous_time` 指向“9月9日中午14点”；`historical_source` 提醒这是 2024 年材料。
+`outputs/campus/law.md` 保留招生人数与面试入围比例，`year_not_explicit` 提醒报名时间本身没有年份。
+两份报告都进入待人工审阅状态。审阅单先列需要核对的问题，再列招生信息和选拔规则；
+去重后的原文证据与文件指纹可展开查看。完整字段与原文位置保存在相邻 JSON 中。
+
+下方保留通用文档、HTTP、长文、Docker 和真实模型配置的演示步骤。
+
 # 可复制演示
 
 所有命令在本仓库根目录的 WSL / Linux 终端执行。默认没有 `.env` 或保持 `WORKFLOW_PROVIDER=mock`。
@@ -10,7 +25,7 @@ make install
 make check
 ```
 
-本机已实跑 60 个 pytest 通过；1 条 Starlette/httpx 弃用提示不影响结果。
+首版本机实跑 60 个 pytest 通过；1 条 Starlette/httpx 弃用提示不影响结果。
 
 ## 2. JD → JSON / Markdown
 

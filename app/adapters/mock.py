@@ -4,7 +4,13 @@ import json
 import re
 from importlib.resources import files
 
-from app.domain.models import AnalysisInsights, Classification, DocumentType, Summary
+from app.domain.models import (
+    AnalysisInsights,
+    CampusAdmissionInfo,
+    Classification,
+    DocumentType,
+    Summary,
+)
 from app.domain.provider import Completion, ModelRequest
 
 
@@ -51,6 +57,8 @@ class MockLLM:
             return json.dumps(
                 {"sentences": self._brief(list(dict.fromkeys(values)))}, ensure_ascii=False
             )
+        if schema is CampusAdmissionInfo:
+            return json.dumps(self._campus_admission(text), ensure_ascii=False)
         result: dict = {}
         for field in schema.model_fields:
             values = self._values(text, self.rules["fields"][field])
@@ -62,6 +70,29 @@ class MockLLM:
             else:
                 result[field] = values[0] if values else None
         return json.dumps(result, ensure_ascii=False)
+
+    @staticmethod
+    def _campus_admission(text: str) -> dict:
+        """Bounded paragraph rules for the bundled historical notices; not general NLP."""
+        lines = [line.strip() for line in text.splitlines() if line.strip()]
+        paragraphs = [line for line in lines if not line.startswith(("#", ">"))]
+
+        def first(pattern: str) -> str | None:
+            return next((line for line in paragraphs if re.search(pattern, line)), None)
+
+        return {
+            "title": first(r"招生简章$"),
+            "audience": first(r"面向.*2024级|2024级新入校.*可申请"),
+            "registration_window": first(r"报名时间[：:]"),
+            "quota_rules": [line for line in paragraphs if re.search(r"录取\d+名|计划人数", line)],
+            "selection_rules": [line for line in paragraphs if re.search(r"笔试|面试", line)],
+            "restrictions": [
+                line
+                for line in paragraphs
+                if re.search(r"不得报名|不允许转专业|除外|转出机制", line)
+            ],
+            "summary": None,
+        }
 
     @staticmethod
     def _brief(values: list[str]) -> list[str]:

@@ -1,6 +1,7 @@
 """The authoritative document-type → Pydantic/JSON Schema registry."""
 
 from app.domain.models import (
+    CampusAdmissionInfo,
     DocumentType,
     JobInfo,
     MeetingInfo,
@@ -15,6 +16,7 @@ MODEL_REGISTRY = {
     DocumentType.MEETING: MeetingInfo,
     DocumentType.REPORT: TechnicalReportInfo,
     DocumentType.UNKNOWN: UnknownInfo,
+    DocumentType.CAMPUS: CampusAdmissionInfo,
 }
 
 
